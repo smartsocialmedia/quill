@@ -187,6 +187,10 @@ class Quill extends EventEmitter2
     else
       format.prepare(value)
 
+  clearUndoHistory: () ->
+    undo_manager = this.getModule("undo-manager")
+    undo_manager.clear();
+
   setContents: (delta, source = Quill.sources.API) ->
     if Array.isArray(delta)
       delta = { ops: delta.slice() }
