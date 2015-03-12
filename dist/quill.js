@@ -8810,8 +8810,7 @@ PasteManager = (function() {
   }
 
   PasteManager.prototype._paste = function() {
-    var oldDocLength, range;
-    oldDocLength = this.quill.getLength();
+    var range;
     range = this.quill.getSelection();
     if (range == null) {
       return;
@@ -8819,9 +8818,13 @@ PasteManager = (function() {
     this.container.focus();
     return _.defer((function(_this) {
       return function() {
-        var delta, doc, lengthAdded, line, lineBottom, offset, ref, windowBottom;
+        var delta, deltaLength, doc, lengthAdded, line, lineBottom, offset, ref, windowBottom;
         doc = new Document(_this.container, _this.quill.options);
         delta = doc.toDelta();
+        deltaLength = delta.length();
+        if (!(deltaLength > 0)) {
+          return;
+        }
         lengthAdded = delta.length() - 1;
         delta.compose(new Delta().retain(lengthAdded)["delete"](1));
         if (range.start > 0) {

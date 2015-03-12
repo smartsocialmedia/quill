@@ -11,13 +11,16 @@ class PasteManager
     dom(@quill.root).on('paste', _.bind(this._paste, this))
 
   _paste: ->
-    oldDocLength = @quill.getLength()
     range = @quill.getSelection()
     return unless range?
     @container.focus()
     _.defer( =>
       doc = new Document(@container, @quill.options)
       delta = doc.toDelta()
+
+      deltaLength = delta.length()
+      return unless deltaLength > 0
+
       lengthAdded = delta.length() - 1
       # Need to remove trailing newline so paste is inline, losing format is expected and observed in Word
       delta.compose(new Delta().retain(lengthAdded).delete(1))
