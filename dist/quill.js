@@ -9705,6 +9705,18 @@ Quill = (function(superClass) {
     return undo_manager.clear();
   };
 
+  Quill.prototype.undo = function() {
+    var undo_manager;
+    undo_manager = this.getModule("undo-manager");
+    return undo_manager.undo();
+  };
+
+  Quill.prototype.redo = function() {
+    var undo_manager;
+    undo_manager = this.getModule("undo-manager");
+    return undo_manager.redo();
+  };
+
   Quill.prototype.setContents = function(delta, source) {
     if (source == null) {
       source = Quill.sources.API;
