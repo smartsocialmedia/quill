@@ -64,10 +64,22 @@ class Quill extends EventEmitter2
     @options.modules = moduleOptions
     @options.id = @id = "ql-editor-#{Quill.editors.length + 1}"
     @modules = {}
+
     @root = this.addContainer('ql-editor')
     @editor = new Editor(@root, this, @options)
     Quill.editors.push(this)
     this.setHTML(html, Quill.sources.SILENT)
+
+    @placeholder = this.addContainer('ql-placeholder')
+    this.on(Quill.events.TEXT_CHANGE, (delta) ->
+      text = this.getText()
+      blank = text.length == 1 and text.charCodeAt(0) == 10
+      if (blank)
+        @placeholder.style.display = 'block';
+      else
+        @placeholder.style.display = 'none'
+    )
+
     themeClass = Quill.themes[@options.theme]
     throw new Error("Cannot load #{@options.theme} theme. Are you sure you registered it?") unless themeClass?
     @theme = new themeClass(this, @options)
@@ -223,6 +235,9 @@ class Quill extends EventEmitter2
   setText: (text, source = Quill.sources.API) ->
     delta = new Delta().insert(text)
     this.setContents(delta, source)
+
+  setPlaceholderText: (text) ->
+    @placeholder.innerHTML = text;
 
   updateContents: (delta, source = Quill.sources.API) ->
     delta = { ops: delta } if Array.isArray(delta)

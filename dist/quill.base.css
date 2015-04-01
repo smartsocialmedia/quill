@@ -184,3 +184,8 @@
 .ql-editor.ql-ie-10 br {
   display: none;
 }
+.ql-placeholder {
+  margin-top: -18px;
+  color: #999;
+  pointer-events: none;
+}
