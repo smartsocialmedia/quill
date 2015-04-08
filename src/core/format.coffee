@@ -44,6 +44,30 @@ class Format
       prepare: (value) ->
         document.execCommand('fontSize', false, dom.convertFontSize(value))
 
+    h1:
+      tag: 'H1'
+      prepare: 'heading'
+      type: Format.types.LINE
+      exclude: ['h2', 'h3', 'blockquote', 'bullet', 'list']
+
+    h2:
+      tag: 'H2'
+      prepare: 'heading'
+      type: Format.types.LINE
+      exclude: ['h1', 'h3', 'blockquote', 'bullet', 'list']
+
+    h3:
+      tag: 'H3'
+      prepare: 'heading'
+      type: Format.types.LINE
+      exclude: ['h1', 'h2', 'blockquote', 'bullet', 'list']
+
+    blockquote:
+      tag: 'BLOCKQUOTE'
+      prepare: 'formatBlock'
+      type: Format.types.LINE
+      exclude: ['h1', 'h2', 'h3', 'bullet', 'list']
+
     link:
       tag: 'A'
       attribute: 'href'
@@ -59,13 +83,13 @@ class Format
 
     bullet:
       type: Format.types.LINE
-      exclude: 'list'
+      exclude: ['list', 'h1', 'h2', 'h3', 'blockquote']
       parentTag: 'UL'
       tag: 'LI'
 
     list:
       type: Format.types.LINE
-      exclude: 'bullet'
+      exclude: ['bullet', 'h1', 'h2', 'h3', 'blockquote']
       parentTag: 'OL'
       tag: 'LI'
 

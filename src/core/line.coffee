@@ -74,11 +74,21 @@ class Line extends LinkedList.Node
       return unless format?
       # TODO reassigning @node might be dangerous...
       if format.isType(Format.types.LINE)
-        if format.config.exclude and @formats[format.config.exclude]
-          excludeFormat = @doc.formats[format.config.exclude]
-          if excludeFormat?
+        if format.config.exclude
+          exclude = format.config.exclude;
+          if exclude instanceof String
+            exclude = [exclude];
+
+          excludeFormats = [];
+          if _.intersection(@formats, format.config.exclude).length != 0
+            excludeFormats = _.map(exclude, (name) =>
+              return @doc.formats[name];
+            );
+
+          _.each(excludeFormats, (excludeFormat) =>
             @node = excludeFormat.remove(@node)
             delete @formats[format.config.exclude]
+          );
         @node = format.add(@node, value)
       if value
         @formats[name] = value

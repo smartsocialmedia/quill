@@ -6018,6 +6018,30 @@ Format = (function() {
         return document.execCommand('fontSize', false, dom.convertFontSize(value));
       }
     },
+    h1: {
+      tag: 'H1',
+      prepare: 'heading',
+      type: Format.types.LINE,
+      exclude: ['h2', 'h3', 'blockquote', 'bullet', 'list']
+    },
+    h2: {
+      tag: 'H2',
+      prepare: 'heading',
+      type: Format.types.LINE,
+      exclude: ['h1', 'h3', 'blockquote', 'bullet', 'list']
+    },
+    h3: {
+      tag: 'H3',
+      prepare: 'heading',
+      type: Format.types.LINE,
+      exclude: ['h1', 'h2', 'blockquote', 'bullet', 'list']
+    },
+    blockquote: {
+      tag: 'BLOCKQUOTE',
+      prepare: 'formatBlock',
+      type: Format.types.LINE,
+      exclude: ['h1', 'h2', 'h3', 'bullet', 'list']
+    },
     link: {
       tag: 'A',
       attribute: 'href'
@@ -6033,13 +6057,13 @@ Format = (function() {
     },
     bullet: {
       type: Format.types.LINE,
-      exclude: 'list',
+      exclude: ['list', 'h1', 'h2', 'h3', 'blockquote'],
       parentTag: 'UL',
       tag: 'LI'
     },
     list: {
       type: Format.types.LINE,
-      exclude: 'bullet',
+      exclude: ['bullet', 'h1', 'h2', 'h3', 'blockquote'],
       parentTag: 'OL',
       tag: 'LI'
     }
@@ -6413,18 +6437,27 @@ Line = (function(superClass) {
     }
     _.each(formats, (function(_this) {
       return function(value, name) {
-        var excludeFormat, format;
+        var exclude, excludeFormats, format;
         format = _this.doc.formats[name];
         if (format == null) {
           return;
         }
         if (format.isType(Format.types.LINE)) {
-          if (format.config.exclude && _this.formats[format.config.exclude]) {
-            excludeFormat = _this.doc.formats[format.config.exclude];
-            if (excludeFormat != null) {
-              _this.node = excludeFormat.remove(_this.node);
-              delete _this.formats[format.config.exclude];
+          if (format.config.exclude) {
+            exclude = format.config.exclude;
+            if (exclude instanceof String) {
+              exclude = [exclude];
             }
+            excludeFormats = [];
+            if (_.intersection(_this.formats, format.config.exclude).length !== 0) {
+              excludeFormats = _.map(exclude, function(name) {
+                return _this.doc.formats[name];
+              });
+            }
+            _.each(excludeFormats, function(excludeFormat) {
+              _this.node = excludeFormat.remove(_this.node);
+              return delete _this.formats[format.config.exclude];
+            });
           }
           _this.node = format.add(_this.node, value);
         }
@@ -8874,7 +8907,11 @@ Toolbar = (function() {
     LINE: {
       'align': 'align',
       'bullet': 'bullet',
-      'list': 'list'
+      'list': 'list',
+      'h1': 'h1',
+      'h2': 'h2',
+      'h3': 'h3',
+      'blockquote': 'blockquote'
     },
     SELECT: {
       'align': 'align',
@@ -8891,7 +8928,11 @@ Toolbar = (function() {
       'link': 'link',
       'list': 'list',
       'strike': 'strike',
-      'underline': 'underline'
+      'underline': 'underline',
+      'h1': 'h1',
+      'h2': 'h2',
+      'h3': 'h3',
+      'blockquote': 'blockquote'
     },
     TOOLTIP: {
       'image': 'image',
@@ -9418,7 +9459,7 @@ Quill = (function(superClass) {
   Quill.themes = [];
 
   Quill.DEFAULTS = {
-    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list'],
+    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'h1', 'h2', 'h3', 'blockquote', 'link', 'image', 'bullet', 'list'],
     modules: {
       'keyboard': true,
       'paste-manager': true,
