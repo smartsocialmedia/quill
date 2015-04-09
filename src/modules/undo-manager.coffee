@@ -43,6 +43,16 @@ class UndoManager
       redo: []
     @oldDelta = @quill.getContents()
 
+  beginTransaction: ->
+    @ignoreChange = true
+
+  endTransaction: ->
+    newDelta = @quill.getContents()
+    delta = @oldDelta.diff(newDelta)
+    this.record(delta, @oldDelta)
+    @oldDelta = newDelta
+    @ignoreChange = false
+
   record: (changeDelta, oldDelta) ->
     return unless changeDelta.ops.length > 0
     @stack.redo = []

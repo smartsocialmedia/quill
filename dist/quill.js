@@ -9341,6 +9341,19 @@ UndoManager = (function() {
     return this.oldDelta = this.quill.getContents();
   };
 
+  UndoManager.prototype.beginTransaction = function() {
+    return this.ignoreChange = true;
+  };
+
+  UndoManager.prototype.endTransaction = function() {
+    var delta, newDelta;
+    newDelta = this.quill.getContents();
+    delta = this.oldDelta.diff(newDelta);
+    this.record(delta, this.oldDelta);
+    this.oldDelta = newDelta;
+    return this.ignoreChange = false;
+  };
+
   UndoManager.prototype.record = function(changeDelta, oldDelta) {
     var change, ignored, timestamp, undoDelta;
     if (!(changeDelta.ops.length > 0)) {
@@ -9767,6 +9780,18 @@ Quill = (function(superClass) {
     var undo_manager;
     undo_manager = this.getModule("undo-manager");
     return undo_manager.redo();
+  };
+
+  Quill.prototype.beginUndoTransaction = function() {
+    var undo_manager;
+    undo_manager = this.getModule("undo-manager");
+    return undo_manager.beginTransaction();
+  };
+
+  Quill.prototype.endUndoTransaction = function() {
+    var undo_manager;
+    undo_manager = this.getModule("undo-manager");
+    return undo_manager.endTransaction();
   };
 
   Quill.prototype.setContents = function(delta, source) {

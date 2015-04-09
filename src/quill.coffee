@@ -211,6 +211,14 @@ class Quill extends EventEmitter2
     undo_manager = this.getModule("undo-manager")
     undo_manager.redo()
 
+  beginUndoTransaction: () ->
+    undo_manager = this.getModule("undo-manager")
+    undo_manager.beginTransaction()
+
+  endUndoTransaction: () ->
+    undo_manager = this.getModule("undo-manager")
+    undo_manager.endTransaction()
+
   setContents: (delta, source = Quill.sources.API) ->
     if Array.isArray(delta)
       delta = { ops: delta.slice() }
