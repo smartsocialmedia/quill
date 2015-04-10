@@ -80,6 +80,12 @@ class UndoManager
   undo: ->
     this._change('undo', 'redo')
 
+  undoAvailable: ->
+    return @stack and @stack.undo and @stack.undo.length > 0
+
+  redoAvailable: ->
+    return @stack and @stack.redo and @stack.redo.length > 0
+
   _getLastChangeIndex: (delta) ->
     lastIndex = 0
     index = 0

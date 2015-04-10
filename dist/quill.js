@@ -9392,6 +9392,14 @@ UndoManager = (function() {
     return this._change('undo', 'redo');
   };
 
+  UndoManager.prototype.undoAvailable = function() {
+    return this.stack && this.stack.undo && this.stack.undo.length > 0;
+  };
+
+  UndoManager.prototype.redoAvailable = function() {
+    return this.stack && this.stack.redo && this.stack.redo.length > 0;
+  };
+
   UndoManager.prototype._getLastChangeIndex = function(delta) {
     var index, lastIndex;
     lastIndex = 0;
@@ -9780,6 +9788,18 @@ Quill = (function(superClass) {
     var undo_manager;
     undo_manager = this.getModule("undo-manager");
     return undo_manager.redo();
+  };
+
+  Quill.prototype.undoAvailable = function() {
+    var undo_manager;
+    undo_manager = this.getModule("undo-manager");
+    return undo_manager.undoAvailable();
+  };
+
+  Quill.prototype.redoAvailable = function() {
+    var undo_manager;
+    undo_manager = this.getModule("undo-manager");
+    return undo_manager.redoAvailable();
   };
 
   Quill.prototype.beginUndoTransaction = function() {

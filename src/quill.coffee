@@ -199,23 +199,31 @@ class Quill extends EventEmitter2
     else
       format.prepare(value)
 
-  clearUndoHistory: () ->
+  clearUndoHistory: ->
     undo_manager = this.getModule("undo-manager")
     undo_manager.clear();
 
-  undo: () ->
+  undo: ->
     undo_manager = this.getModule("undo-manager")
     undo_manager.undo()
 
-  redo: () ->
+  redo: ->
     undo_manager = this.getModule("undo-manager")
     undo_manager.redo()
 
-  beginUndoTransaction: () ->
+  undoAvailable: ->
+    undo_manager = this.getModule("undo-manager")
+    return undo_manager.undoAvailable()
+
+  redoAvailable: ->
+    undo_manager = this.getModule("undo-manager")
+    return undo_manager.redoAvailable()
+
+  beginUndoTransaction: ->
     undo_manager = this.getModule("undo-manager")
     undo_manager.beginTransaction()
 
-  endUndoTransaction: () ->
+  endUndoTransaction: ->
     undo_manager = this.getModule("undo-manager")
     undo_manager.endTransaction()
 
