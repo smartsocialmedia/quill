@@ -9650,9 +9650,14 @@ Quill = (function(superClass) {
   };
 
   Quill.prototype.formatLine = function(start, end, name, value, source) {
-    var formats, line, offset, ref, ref1;
+    var end_of_line, formats, line, offset, ref, ref1, text;
     ref = this._buildParams(start, end, name, value, source), start = ref[0], end = ref[1], formats = ref[2], source = ref[3];
-    ref1 = this.editor.doc.findLineAt(end), line = ref1[0], offset = ref1[1];
+    end_of_line = end;
+    text = this.getText(start, end);
+    if (text.length > 0 && text[text.length - 1] === '\n') {
+      end_of_line = end - 1;
+    }
+    ref1 = this.editor.doc.findLineAt(end_of_line), line = ref1[0], offset = ref1[1];
     if (line != null) {
       end += line.length - offset;
     }
