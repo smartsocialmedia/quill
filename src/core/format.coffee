@@ -76,6 +76,11 @@ class Format
       tag: 'IMG'
       attribute: 'src'
 
+    width:
+      type: Format.types.LINE
+      style: 'maxWidth'
+      default: '100%'
+
     align:
       type: Format.types.LINE
       style: 'textAlign'
