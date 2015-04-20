@@ -6369,9 +6369,11 @@ Format = (function() {
       attribute: 'src'
     },
     width: {
-      type: Format.types.LINE,
-      style: 'maxWidth',
-      "default": '100%'
+      style: 'width',
+      "default": '100%',
+      prepare: function(value) {
+        return document.execCommand('width', false, value);
+      }
     },
     align: {
       type: Format.types.LINE,
@@ -9234,15 +9236,15 @@ Toolbar = (function() {
       'h1': 'h1',
       'h2': 'h2',
       'h3': 'h3',
-      'blockquote': 'blockquote',
-      'width': 'width'
+      'blockquote': 'blockquote'
     },
     SELECT: {
       'align': 'align',
       'background': 'background',
       'color': 'color',
       'font': 'font',
-      'size': 'size'
+      'size': 'size',
+      'width': 'width'
     },
     TOGGLE: {
       'bold': 'bold',
