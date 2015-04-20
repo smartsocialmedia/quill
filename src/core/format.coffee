@@ -77,9 +77,10 @@ class Format
       attribute: 'src'
 
     width:
-      type: Format.types.LINE
-      style: 'maxWidth'
+      style: 'width'
       default: '100%'
+      prepare: (value) ->
+        document.execCommand('width', false, value)
 
     align:
       type: Format.types.LINE
