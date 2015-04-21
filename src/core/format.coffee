@@ -44,6 +44,11 @@ class Format
       prepare: (value) ->
         document.execCommand('fontSize', false, dom.convertFontSize(value))
 
+    width:
+      style: 'width'
+      default: '100%'
+      prepare: 'imageSize'
+
     h1:
       tag: 'H1'
       prepare: 'heading'
@@ -75,12 +80,6 @@ class Format
     image:
       tag: 'IMG'
       attribute: 'src'
-
-    width:
-      style: 'width'
-      default: '100%'
-      prepare: (value) ->
-        document.execCommand('width', false, value)
 
     align:
       type: Format.types.LINE
@@ -119,6 +118,12 @@ class Format
         node = formatNode
       else if this.isType(Format.types.LINE)
         node = dom(node).switchTag(@config.tag)
+      else if dom.EMBED_TAGS[formatNode.tagName]?
+        # Copy node's attributes to the embed node and then replace
+        attributes = dom(node).attributes()
+        dom(node).replace(formatNode) if node.parentNode?
+        node = formatNode
+        dom(node).attributes(attributes)
       else
         dom(node).wrap(formatNode)
         node = formatNode

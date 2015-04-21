@@ -6336,6 +6336,11 @@ Format = (function() {
         return document.execCommand('fontSize', false, dom.convertFontSize(value));
       }
     },
+    width: {
+      style: 'width',
+      "default": '100%',
+      prepare: 'imageSize'
+    },
     h1: {
       tag: 'H1',
       prepare: 'heading',
@@ -6368,13 +6373,6 @@ Format = (function() {
       tag: 'IMG',
       attribute: 'src'
     },
-    width: {
-      style: 'width',
-      "default": '100%',
-      prepare: function(value) {
-        return document.execCommand('width', false, value);
-      }
-    },
     align: {
       type: Format.types.LINE,
       style: 'textAlign',
@@ -6399,7 +6397,7 @@ Format = (function() {
   }
 
   Format.prototype.add = function(node, value) {
-    var formatNode, inline, parentNode, ref, ref1;
+    var attributes, formatNode, inline, parentNode, ref, ref1;
     if (!value) {
       return this.remove(node);
     }
@@ -6425,6 +6423,13 @@ Format = (function() {
         node = formatNode;
       } else if (this.isType(Format.types.LINE)) {
         node = dom(node).switchTag(this.config.tag);
+      } else if (dom.EMBED_TAGS[formatNode.tagName] != null) {
+        attributes = dom(node).attributes();
+        if (node.parentNode != null) {
+          dom(node).replace(formatNode);
+        }
+        node = formatNode;
+        dom(node).attributes(attributes);
       } else {
         dom(node).wrap(formatNode);
         node = formatNode;
@@ -8082,7 +8087,6 @@ dom = _.extend(dom, {
     'COMMAND': 'COMMAND',
     'EMBED': 'EMBED',
     'HR': 'HR',
-    'IMG': 'IMG',
     'INPUT': 'INPUT',
     'KEYGEN': 'KEYGEN',
     'LINK': 'LINK',

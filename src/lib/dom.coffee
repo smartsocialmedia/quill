@@ -427,7 +427,6 @@ dom = _.extend(dom,
     'COMMAND'
     'EMBED'
     'HR'
-    'IMG'
     'INPUT'
     'KEYGEN'
     'LINK'
