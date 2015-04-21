@@ -6336,6 +6336,11 @@ Format = (function() {
         return document.execCommand('fontSize', false, dom.convertFontSize(value));
       }
     },
+    width: {
+      style: 'width',
+      "default": '100%',
+      prepare: 'imageSize'
+    },
     h1: {
       tag: 'H1',
       prepare: 'heading',
@@ -6368,11 +6373,6 @@ Format = (function() {
       tag: 'IMG',
       attribute: 'src'
     },
-    width: {
-      type: Format.types.LINE,
-      style: 'maxWidth',
-      "default": '100%'
-    },
     align: {
       type: Format.types.LINE,
       style: 'textAlign',
@@ -6397,7 +6397,7 @@ Format = (function() {
   }
 
   Format.prototype.add = function(node, value) {
-    var formatNode, inline, parentNode, ref, ref1;
+    var attributes, formatNode, inline, parentNode, ref, ref1;
     if (!value) {
       return this.remove(node);
     }
@@ -6416,7 +6416,14 @@ Format = (function() {
     }
     if (_.isString(this.config.tag)) {
       formatNode = document.createElement(this.config.tag);
-      if (dom.VOID_TAGS[formatNode.tagName] != null) {
+      if (dom.EMBED_TAGS[formatNode.tagName] != null) {
+        attributes = dom(node).attributes();
+        if (node.parentNode != null) {
+          dom(node).replace(formatNode);
+        }
+        node = formatNode;
+        dom(node).attributes(attributes);
+      } else if (dom.VOID_TAGS[formatNode.tagName] != null) {
         if (node.parentNode != null) {
           dom(node).replace(formatNode);
         }
@@ -9234,15 +9241,15 @@ Toolbar = (function() {
       'h1': 'h1',
       'h2': 'h2',
       'h3': 'h3',
-      'blockquote': 'blockquote',
-      'width': 'width'
+      'blockquote': 'blockquote'
     },
     SELECT: {
       'align': 'align',
       'background': 'background',
       'color': 'color',
       'font': 'font',
-      'size': 'size'
+      'size': 'size',
+      'width': 'width'
     },
     TOGGLE: {
       'bold': 'bold',
