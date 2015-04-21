@@ -6416,20 +6416,20 @@ Format = (function() {
     }
     if (_.isString(this.config.tag)) {
       formatNode = document.createElement(this.config.tag);
-      if (dom.VOID_TAGS[formatNode.tagName] != null) {
-        if (node.parentNode != null) {
-          dom(node).replace(formatNode);
-        }
-        node = formatNode;
-      } else if (this.isType(Format.types.LINE)) {
-        node = dom(node).switchTag(this.config.tag);
-      } else if (dom.EMBED_TAGS[formatNode.tagName] != null) {
+      if (dom.EMBED_TAGS[formatNode.tagName] != null) {
         attributes = dom(node).attributes();
         if (node.parentNode != null) {
           dom(node).replace(formatNode);
         }
         node = formatNode;
         dom(node).attributes(attributes);
+      } else if (dom.VOID_TAGS[formatNode.tagName] != null) {
+        if (node.parentNode != null) {
+          dom(node).replace(formatNode);
+        }
+        node = formatNode;
+      } else if (this.isType(Format.types.LINE)) {
+        node = dom(node).switchTag(this.config.tag);
       } else {
         dom(node).wrap(formatNode);
         node = formatNode;
@@ -8087,6 +8087,7 @@ dom = _.extend(dom, {
     'COMMAND': 'COMMAND',
     'EMBED': 'EMBED',
     'HR': 'HR',
+    'IMG': 'IMG',
     'INPUT': 'INPUT',
     'KEYGEN': 'KEYGEN',
     'LINK': 'LINK',

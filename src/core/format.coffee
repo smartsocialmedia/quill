@@ -113,17 +113,17 @@ class Format
         dom(node.parentNode).merge(node.parentNode.nextSibling)
     if _.isString(@config.tag)
       formatNode = document.createElement(@config.tag)
-      if dom.VOID_TAGS[formatNode.tagName]?
-        dom(node).replace(formatNode) if node.parentNode?
-        node = formatNode
-      else if this.isType(Format.types.LINE)
-        node = dom(node).switchTag(@config.tag)
-      else if dom.EMBED_TAGS[formatNode.tagName]?
+      if dom.EMBED_TAGS[formatNode.tagName]?
         # Copy node's attributes to the embed node and then replace
         attributes = dom(node).attributes()
         dom(node).replace(formatNode) if node.parentNode?
         node = formatNode
         dom(node).attributes(attributes)
+      else if dom.VOID_TAGS[formatNode.tagName]?
+        dom(node).replace(formatNode) if node.parentNode?
+        node = formatNode
+      else if this.isType(Format.types.LINE)
+        node = dom(node).switchTag(@config.tag)
       else
         dom(node).wrap(formatNode)
         node = formatNode
