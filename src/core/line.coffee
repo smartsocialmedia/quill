@@ -71,25 +71,17 @@ class Line extends LinkedList.Node
       formats[name] = value
     _.each(formats, (value, name) =>
       format = @doc.formats[name]
-      return unless format?
+      return unless format? && format.isType(Format.types.LINE)
       # TODO reassigning @node might be dangerous...
-      if format.isType(Format.types.LINE)
-        if format.config.exclude
-          exclude = format.config.exclude;
-          if exclude instanceof String
-            exclude = [exclude];
-
-          excludeFormats = [];
-          if _.intersection(@formats, format.config.exclude).length != 0
-            excludeFormats = _.map(exclude, (name) =>
-              return @doc.formats[name];
-            );
-
-          _.each(excludeFormats, (excludeFormat) =>
-            @node = excludeFormat.remove(@node)
-            delete @formats[format.config.exclude]
-          );
-        @node = format.add(@node, value)
+      if format.config.exclude
+        exclude = format.config.exclude
+        if exclude instanceof String
+          exclude = [exclude]
+        _.each(_.intersection(Object.keys(@formats), exclude), (excluded) =>
+          @node = @doc.formats[excluded].remove(@node)
+          delete @formats[excluded]
+        )
+      @node = format.add(@node, value)
       if value
         @formats[name] = value
       else
