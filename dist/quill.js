@@ -6769,7 +6769,7 @@ Line = (function(superClass) {
       return function(value, name) {
         var exclude, format;
         format = _this.doc.formats[name];
-        if (!((format != null) && format.isType(Format.types.LINE))) {
+        if ((format == null) || !format.isType(Format.types.LINE)) {
           return;
         }
         if (format.config.exclude) {

@@ -71,7 +71,7 @@ class Line extends LinkedList.Node
       formats[name] = value
     _.each(formats, (value, name) =>
       format = @doc.formats[name]
-      return unless format? && format.isType(Format.types.LINE)
+      return if !format? || !format.isType(Format.types.LINE)
       # TODO reassigning @node might be dangerous...
       if format.config.exclude
         exclude = format.config.exclude
