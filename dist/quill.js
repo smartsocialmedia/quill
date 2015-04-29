@@ -6767,30 +6767,22 @@ Line = (function(superClass) {
     }
     _.each(formats, (function(_this) {
       return function(value, name) {
-        var exclude, excludeFormats, format;
+        var exclude, format;
         format = _this.doc.formats[name];
-        if (format == null) {
+        if ((format == null) || !format.isType(Format.types.LINE)) {
           return;
         }
-        if (format.isType(Format.types.LINE)) {
-          if (format.config.exclude) {
-            exclude = format.config.exclude;
-            if (exclude instanceof String) {
-              exclude = [exclude];
-            }
-            excludeFormats = [];
-            if (_.intersection(_this.formats, format.config.exclude).length !== 0) {
-              excludeFormats = _.map(exclude, function(name) {
-                return _this.doc.formats[name];
-              });
-            }
-            _.each(excludeFormats, function(excludeFormat) {
-              _this.node = excludeFormat.remove(_this.node);
-              return delete _this.formats[format.config.exclude];
-            });
+        if (format.config.exclude) {
+          exclude = format.config.exclude;
+          if (exclude instanceof String) {
+            exclude = [exclude];
           }
-          _this.node = format.add(_this.node, value);
+          _.each(_.intersection(Object.keys(_this.formats), exclude), function(excluded) {
+            _this.node = _this.doc.formats[excluded].remove(_this.node);
+            return delete _this.formats[excluded];
+          });
         }
+        _this.node = format.add(_this.node, value);
         if (value) {
           return _this.formats[name] = value;
         } else {
