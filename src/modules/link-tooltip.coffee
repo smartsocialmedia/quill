@@ -61,7 +61,10 @@ class LinkTooltip extends Tooltip
         anchor = this._findAnchor(@range)
         anchor.href = url if anchor?
       else
+        rangeStart = @range.start
+        rangeEnd = @range.end
         @quill.formatText(@range, 'link', url, 'user')
+        @quill.formatText(rangeStart, rangeEnd, 'target', '_blank', 'user')
     this.setMode(url, false)
 
   removeLink: (range) ->
@@ -69,6 +72,7 @@ class LinkTooltip extends Tooltip
     if range.isCollapsed()
       range = this._expandRange(range)
     @quill.formatText(range, 'link', false, 'user')
+    @quill.formatText(range, 'target', false, 'user')
     @toolbar.setActive('link', false) if @toolbar?
 
   setMode: (url, edit = false) ->

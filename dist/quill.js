@@ -6369,6 +6369,9 @@ Format = (function() {
       tag: 'A',
       attribute: 'href'
     },
+    target: {
+      attribute: 'target'
+    },
     image: {
       tag: 'IMG',
       attribute: 'src'
@@ -8855,7 +8858,7 @@ LinkTooltip = (function(superClass) {
   };
 
   LinkTooltip.prototype.saveLink = function() {
-    var anchor, url;
+    var anchor, rangeEnd, rangeStart, url;
     url = this._normalizeURL(this.textbox.value);
     if (this.range != null) {
       if (this.range.isCollapsed()) {
@@ -8864,7 +8867,10 @@ LinkTooltip = (function(superClass) {
           anchor.href = url;
         }
       } else {
+        rangeStart = this.range.start;
+        rangeEnd = this.range.end;
         this.quill.formatText(this.range, 'link', url, 'user');
+        this.quill.formatText(rangeStart, rangeEnd, 'target', '_blank', 'user');
       }
     }
     return this.setMode(url, false);
@@ -8875,6 +8881,7 @@ LinkTooltip = (function(superClass) {
       range = this._expandRange(range);
     }
     this.quill.formatText(range, 'link', false, 'user');
+    this.quill.formatText(range, 'target', false, 'user');
     if (this.toolbar != null) {
       return this.toolbar.setActive('link', false);
     }
@@ -9803,7 +9810,7 @@ Quill = (function(superClass) {
   Quill.themes = [];
 
   Quill.DEFAULTS = {
-    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'h1', 'h2', 'h3', 'blockquote', 'width', 'link', 'image', 'bullet', 'list'],
+    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'h1', 'h2', 'h3', 'blockquote', 'width', 'link', 'target', 'image', 'bullet', 'list'],
     modules: {
       'keyboard': true,
       'paste-manager': true,

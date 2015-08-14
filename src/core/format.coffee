@@ -77,6 +77,9 @@ class Format
       tag: 'A'
       attribute: 'href'
 
+    target:
+      attribute: 'target'
+
     image:
       tag: 'IMG'
       attribute: 'src'
